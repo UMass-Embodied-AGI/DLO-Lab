@@ -1,3 +1,18 @@
+# Project files to ignore
+.github/
+.vscode/
+
+# Assets for DLO-Lab
+genesis/assets/dlo-lab/
+*.mp4
+
+# Logs
+logs
+*.out
+
+# LuisaRender
+LuisaRender/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
