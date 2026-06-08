@@ -1,0 +1,13 @@
+#!/bin/bash
+
+python trajopt/gd.py \
+    --n_epochs 401 \
+    --n_steps 100 \
+    --n_inner_steps 20 \
+    --pos_bound 0.01 \
+    --min_z 0.04 \
+    --use_adam \
+    --lr_scheduler cosine \
+    --lr 0.001 \
+    --task wrapping \
+    --exp_name gd-01
