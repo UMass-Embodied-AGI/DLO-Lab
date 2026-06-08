@@ -145,7 +145,7 @@ dlo-lab = [
     "omegaconf",
     # Natural sorting of file/sequence names
     "natsort",
-    # CMA-ES optimizer used for system identification
+    # CMA-ES optimizer used for trajectory optimization
     "cma",
     # Pinocchio-based inverse kinematics (Pink)
     "pin-pink",
