@@ -21,7 +21,7 @@
 
 <p align="center">
   <a href="">
-    <img src="https://dlo-lab-26.github.io/assets/video/code_teaser.gif" alt="DLO-Lab teaser" width="85%">
+    <img src="teaser.gif" alt="DLO-Lab teaser" width="85%">
   </a>
 </p>
 
