@@ -153,7 +153,7 @@ python examples/quick_example.py --output_folder ./output
 
 ### DLO-Lab Benchmark
 
-DLO-Lab benchmarks eight manipulation tasks — `coiling`, `gathering`, `lifting`, `separation`, `slingshot`, `unknotting`, `wiring_post`, `wrapping` — across several learning and trajectory-optimization methods. See [`experiments/envs/`](experiments/envs) for details.
+DLO-Lab benchmarks eight manipulation tasks — `coiling`, `gathering`, `lifting`, `separation`, `slingshot`, `unknotting`, `wiring_post`, `wrapping` — across several learning and trajectory-optimization methods. You could also extend beyond these tasks with the provided APIs.
 
 **Note: All commands below are run from the `experiments/` directory.**
 
@@ -199,6 +199,10 @@ python trajopt/gd.py    --task coiling --n_steps $n_steps --exp_name gd-01    --
 #### Ray-traced rendering
 
 If you want to use the ray-traced renderer, please follow [the instruction](https://genesis-world.readthedocs.io/en/latest/user_guide/getting_started/visualization.html#photo-realistic-rendering-with-luisa-deprecating) to install LuisaRenderer first.
+
+#### Adding a new task
+
+Please follow [this guide](experiments/envs/README.md) for adding a new manipulation environment.
 
 ---
 
