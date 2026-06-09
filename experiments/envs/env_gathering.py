@@ -640,7 +640,7 @@ class Train_Env_Gathering(Train_Env):
 
         obs_rope = torch.cat([obs_rope_pos, obs_rope_vel], dim=1)
 
-        pos1 = self.sphere.get_particles_tc()                       # shape: (n_envs, n_particles, 3)
+        pos1 = self.sphere.get_particles_pos()                      # shape: (n_envs, n_particles, 3)
         pos1 = torch.mean(pos1, dim=1).to(torch.float32)            # shape: (n_envs, 3)
         pos2 = self.bunny.get_pos().to(torch.float32)               # shape: (n_envs, 3)
         pos3 = self.cylinder.get_pos().to(torch.float32)            # shape: (n_envs, 3)
