@@ -37,12 +37,10 @@ def main():
     args = parser.parse_args()
 
     script_file = None
-    if 'ppo' in args.exp_name:
-        script_file = 'rl/ppo.py'
+    if 'rudin' in args.exp_name:
+        script_file = 'rl/rudinppo.py'
     elif 'sac' in args.exp_name:
         script_file = 'rl/sac.py'
-    elif 'rudin' in args.exp_name:
-        script_file = 'rl/rudinppo.py'
 
     if script_file is None:
         print("[supervisor] Error: Cannot determine RL algorithm from exp_name.")

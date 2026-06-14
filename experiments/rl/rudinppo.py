@@ -202,6 +202,8 @@ def experiment(
             print(f"Resuming from checkpoint: {ckpt_path}")
             agent = alg.load(path=ckpt_path)
 
+        agent.policy._log_sigma.data = agent.policy._log_sigma.data.float()
+
         record = ckpt_dir / "record.json"
         if os.path.exists(record):
             with open(record, "r") as f:
