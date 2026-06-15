@@ -60,7 +60,7 @@ class Train_Env_Separation(Train_Env):
             table = self.scene.add_entity(
                 morph=gs.morphs.Mesh(
                     file="dlo-lab/meshes/wooden_table.glb",
-                    pos=(-0., 0, -0.799418 * 2),
+                    pos=(0.25, 0, -0.799418 * 2),
                     euler=(0, 0, 0),
                     scale=2,
                     collision=False,
