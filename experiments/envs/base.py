@@ -77,8 +77,8 @@ class Train_Env():
                 show_viewer=config.GUI,
                 renderer=gs.renderers.RayTracer(
                     env_surface=gs.surfaces.Emission(
-                        emissive_texture=gs.textures.ImageTexture( 
-                            image_path='dlo-lab/exrs/brown_photostudio_02_4k.exr',
+                        emissive_texture=gs.textures.ImageTexture(
+                            image_path=config.get('exr_path', 'dlo-lab/exrs/brown_photostudio_02_4k.exr'),
                             image_color=(0.6, 0.6, 0.6),
                             encoding='linear',
                         ),
