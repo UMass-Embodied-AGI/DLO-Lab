@@ -204,6 +204,10 @@ If you want to use the ray-traced renderer, please follow [the instruction](http
 
 Please follow [this guide](experiments/envs/README.md) for adding a new manipulation environment.
 
+#### Simulation demo collection
+
+We offer APIs for collecting simulation demos and saving them as [LeRobot v3.0](https://huggingface.co/docs/lerobot/lerobot-dataset-v3) datasets, which can be used to train visuomotor policies. Please follow [this guide](experiments/datagen/README.md) for details.
+
 ---
 
 Please feel free to contact Junyi Cao (xjay2018@gmail.com) if you have any questions about this work.
