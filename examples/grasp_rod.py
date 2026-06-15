@@ -96,7 +96,7 @@ def main():
             segment_mass=0.001,
             K=1e5,
             E=1e5,
-            G=1e4,
+            G=5e5,
             plastic_yield=np.inf,
             use_inextensible=False,
         ),
