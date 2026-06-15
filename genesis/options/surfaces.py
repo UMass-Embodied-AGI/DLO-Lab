@@ -564,7 +564,7 @@ class BSDF(Surface):
     color : tuple | None, optional
         Diffuse color of the surface. Shortcut for `diffuse_texture` with a single color.
     ior : float, optional
-        Index of Refraction. Defaults to 1.0.
+        Index of Refraction. Defaults to 1.5.
     specular_trans : float, optional
         Specular transmission. Defaults to 0.0.
     diffuse_trans : float, optional
@@ -583,7 +583,9 @@ class BSDF(Surface):
         Emissive texture of the surface.
     """
 
-    ior: float | None = 1.0
+    # NOTE: changed to 1.5 (standard dielectric). Defaulting BSDF/Default to 1.0 here silently zeroed 
+    # Fresnel specular, making GLB props render fully matte.
+    ior: float | None = 1.5
 
     diffuse_texture: Texture | None = None
     opacity_texture: Texture | None = None
