@@ -152,6 +152,14 @@ dlo-lab = [
     # QP solvers used by Pink IK
     "qpsolvers[quadprog]",
     "qpsolvers[proxqp]",
+    # LeRobot used for collecting robot data
+    "lerobot",
+    # LeRobot v3.0 dataset generation
+    "pandas",
+    "pyarrow",
+    "imageio[ffmpeg]",
+    # Web UI for manual dataset episode filtering
+    "flask",
 ]
 
 [project.scripts]
