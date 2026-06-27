@@ -6,9 +6,10 @@
 genesis/assets/dlo-lab/
 *.mp4
 
-# Logs
+# Logs and analysis output
 logs
 *.out
+experiments/unknotting_analysis/
 
 # LuisaRender
 LuisaRender/
