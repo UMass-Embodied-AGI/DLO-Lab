@@ -11,14 +11,7 @@ from omegaconf import DictConfig
 import sys
 sys.path.append('.')
 from envs.base import Train_Env
-from envs.env_coiling import Train_Env_Coiling
-from envs.env_gathering import Train_Env_Gathering
-from envs.env_lifting import Train_Env_Lifting
-from envs.env_separation import Train_Env_Separation
-from envs.env_slingshot import Train_Env_Slingshot
-from envs.env_unknotting import Train_Env_Unknotting
-from envs.env_wiring_post import Train_Env_Wiring_post
-from envs.env_wrapping import Train_Env_Wrapping
+from envs.registry import get_env_class
 
 from utils.logging import color_print
 
@@ -31,16 +24,6 @@ def experiment(args):
     random.seed(args.seed)
     np.random.seed(args.seed)
 
-    env_dict = {
-        'coiling': Train_Env_Coiling,
-        'gathering': Train_Env_Gathering,
-        'lifting': Train_Env_Lifting,
-        'separation': Train_Env_Separation,
-        'slingshot': Train_Env_Slingshot,
-        'unknotting': Train_Env_Unknotting,
-        'wiring_post': Train_Env_Wiring_post,
-        'wrapping': Train_Env_Wrapping,
-    }
     cfg = DictConfig({
         "task": args.task,
         "log_dir": os.path.join("logs", args.task, args.exp_name),
@@ -53,7 +36,7 @@ def experiment(args):
         "bptt_window": args.bptt_window,
         "grad_clip": args.grad_clip
     })
-    gd_env: Train_Env = env_dict[args.task](config=cfg)
+    gd_env: Train_Env = get_env_class(args.task)(config=cfg)
 
     task = args.task
     exp_name = args.exp_name

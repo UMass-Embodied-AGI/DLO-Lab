@@ -13,14 +13,7 @@ import cma
 import sys
 sys.path.append('.')
 from envs.base import Train_Env
-from envs.env_coiling import Train_Env_Coiling
-from envs.env_gathering import Train_Env_Gathering
-from envs.env_lifting import Train_Env_Lifting
-from envs.env_separation import Train_Env_Separation
-from envs.env_slingshot import Train_Env_Slingshot
-from envs.env_unknotting import Train_Env_Unknotting
-from envs.env_wiring_post import Train_Env_Wiring_post
-from envs.env_wrapping import Train_Env_Wrapping
+from envs.registry import get_env_class
 
 from utils.logging import color_print
 from utils.domain_randomization import randomized_config
@@ -412,19 +405,7 @@ def _build_env(
         raytracer: bool = False
     ) -> Train_Env:
     task = task.lower()
-    task_to_env = {
-        "coiling":   Train_Env_Coiling,
-        "gathering": Train_Env_Gathering,
-        "lifting":   Train_Env_Lifting,
-        "separation": Train_Env_Separation,
-        "slingshot": Train_Env_Slingshot,
-        "unknotting": Train_Env_Unknotting,
-        "wiring_post": Train_Env_Wiring_post,
-        "wrapping":  Train_Env_Wrapping,
-    }
-    if task not in task_to_env:
-        raise ValueError(f"Unknown task '{task}'. Valid: {sorted(task_to_env.keys())}")
-    EnvCls = task_to_env[task]
+    EnvCls = get_env_class(task)
     if vis_traj is None:
         camera = False
     else:

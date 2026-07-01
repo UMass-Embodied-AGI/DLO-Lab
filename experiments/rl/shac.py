@@ -17,14 +17,7 @@ from omegaconf import DictConfig
 import sys
 sys.path.append('.')
 from envs.base import Train_Env
-from envs.env_coiling import Train_Env_Coiling
-from envs.env_gathering import Train_Env_Gathering
-from envs.env_lifting import Train_Env_Lifting
-from envs.env_separation import Train_Env_Separation
-from envs.env_slingshot import Train_Env_Slingshot
-from envs.env_unknotting import Train_Env_Unknotting
-from envs.env_wiring_post import Train_Env_Wiring_post
-from envs.env_wrapping import Train_Env_Wrapping
+from envs.registry import get_env_class
 
 from diff_rl.shac import SHACAgent
 from utils.logging import color_print
@@ -52,17 +45,6 @@ def experiment(
         args: Command line arguments
     """
 
-    # Environment dictionary
-    env_dict = {
-        "coiling": Train_Env_Coiling,
-        "gathering": Train_Env_Gathering,
-        "lifting": Train_Env_Lifting,
-        "separation": Train_Env_Separation,
-        "slingshot": Train_Env_Slingshot,
-        "unknotting": Train_Env_Unknotting,
-        "wiring_post": Train_Env_Wiring_post,
-        "wrapping": Train_Env_Wrapping,
-    }
     cfg = DictConfig({
         "task": task,
         "log_dir": os.path.join("logs", task, exp_name),
@@ -77,7 +59,7 @@ def experiment(
         "bptt_window": args.bptt_window,
     })
     # Create environment with differentiable physics
-    mdp: Train_Env = env_dict[task](config=cfg)
+    mdp: Train_Env = get_env_class(task)(config=cfg)
 
     # Initialize environment for differentiable RL
     n_additional_obj_dict = {

@@ -47,6 +47,14 @@ Two attributes set in `construct_scene` drive the observation/action sizing for 
 - `self.rope` → `self.rope.n_vertices` sizes the observation.
 - `self.control_idx` → number of grasp points; action dimension is derived from it.
 
+**Register the task.** Map your task name to its class once in [`registry.py`](registry.py) — every optimizer entry script (RL, DiffRL, CMA-ES, GD) resolves the class from this single registry:
+
+```python
+from envs.env_myenv import Train_Env_Myenv          # add import
+...
+ENV_REGISTRY = { ..., "myenv": Train_Env_Myenv }     # add to the registry
+```
+
 Everything below is **on top of** this foundation.
 
 ---
@@ -68,15 +76,7 @@ _obs_dim = (rope.n_vertices + n_additional_obj) * 6 + len(control_idx) * 14
 
 (`* 6` = position + velocity per point; `* 14` = pose + joints per gripper.) The length your `compute_observation` returns **must** equal `_obs_dim`, so `n_additional_obj` has to match the object states you concatenate.
 
-**3. Register** in both [`../rl/rudinppo.py`](../rl/rudinppo.py) (PPO) and [`../rl/sac.py`](../rl/sac.py) (SAC):
-
-```python
-from envs.env_myenv import Train_Env_Myenv       # add import
-...
-env_dict = { ..., "myenv": Train_Env_Myenv }     # add to env_dict
-```
-
-Then add a per-task branch in the same file that calls `init_rl_env` with the right `n_additional_obj`:
+**3. Wire up the init branch.** Add a per-task branch in both [`../rl/rudinppo.py`](../rl/rudinppo.py) (PPO) and [`../rl/sac.py`](../rl/sac.py) (SAC) that calls `init_rl_env` with the right `n_additional_obj`:
 
 ```python
 elif task == "myenv":
@@ -107,15 +107,7 @@ DiffRL backpropagates through the simulator, so the scene runs with `requires_gr
 
 **2. Action specs.** DiffRL uses `init_diff_rl_env`, which sets `act_dim = len(control_idx) * 3` (translation only). This differs from RL's `* 6`: when this project was developed, Genesis did not yet support differentiability through the rigid solver, so the control signal is the gradient w.r.t. the grasped **rope vertices** rather than the gripper pose — hence translation-only, no rotation DoF. The observation formula is identical to RL.
 
-**3. Register** in [`../rl/shac.py`](../rl/shac.py) (used by both SHAC and SAPO):
-
-```python
-from envs.env_myenv import Train_Env_Myenv
-...
-env_dict = { ..., "myenv": Train_Env_Myenv }
-```
-
-`shac.py` initializes the env via `mdp.init_diff_rl_env(...)`; make sure its `n_additional_obj` matches your `compute_observation`.
+**3. Wire up `n_additional_obj`.** Add your task to `n_additional_obj_dict` in [`../rl/shac.py`](../rl/shac.py) so the value matches your `compute_observation`.
 
 **4. Launch script:**
 
@@ -138,13 +130,7 @@ CMA-ES is gradient-free; it rolls out sampled open-loop trajectories and keeps t
 
 No `compute_observation` or `step_*` is needed (there is no policy network). `init_cmaes_env` only stores `n_steps_sub`.
 
-**2. Register** in [`../trajopt/cmaes.py`](../trajopt/cmaes.py):
-
-```python
-from envs.env_myenv import Train_Env_Myenv
-...
-env_dict = { ..., "myenv": Train_Env_Myenv }
-```
+**2. Register** your task once in the shared [`registry.py`](registry.py) (see [Common foundation](#common-foundation-required-for-every-optimizer)). [`../trajopt/cmaes.py`](../trajopt/cmaes.py) resolves the class from it automatically.
 
 **3. Launch script:**
 
@@ -167,13 +153,7 @@ GD optimizes a single trajectory by backpropagating the loss through the simulat
 
 `gd.py` initializes the env with `init_gd_env(...)` followed by `construct_traj_optim(...)`, which creates `self.c` from `self.rope` and `self.control_idx` — so the common foundation must set both.
 
-**2. Register** in [`../trajopt/gd.py`](../trajopt/gd.py):
-
-```python
-from envs.env_myenv import Train_Env_Myenv
-...
-env_dict = { ..., "myenv": Train_Env_Myenv }
-```
+**2. Register** your task once in the shared [`registry.py`](registry.py) (see [Common foundation](#common-foundation-required-for-every-optimizer)). [`../trajopt/gd.py`](../trajopt/gd.py) resolves the class from it automatically; you only need to add `"myenv"` to the `--task` `choices` list in `gd.py`'s argument parser.
 
 **3. Launch script:**
 
@@ -192,9 +172,9 @@ Run training from the `experiments/` directory, e.g. `bash scripts/ppo/myenv.sh`
 ### Checklist
 
 - [ ] `envs/env_myenv.py` with `class Train_Env_Myenv(Train_Env)`.
-- [ ] **Foundation:** `construct_scene` sets `self.rope`, `self.control_idx`, a controller (`self.c1`, …) and calls `self.scene.build(...)`; plus `construct_cameras`, `reward`, `reset`.
-- [ ] **RL:** `compute_observation` + `step_all`; registered in `rudinppo.py` & `sac.py` with a matching `init_rl_env` branch; launch scripts under `scripts/ppo|sac/`.
-- [ ] **DiffRL:** `compute_observation` + `loss_criterion` + `step_diff_rl`; registered in `shac.py`; launch scripts under `scripts/shac|sapo/`.
-- [ ] **CMA-ES:** `eval_traj`; registered in `cmaes.py`; launch script under `scripts/cmaes/`.
-- [ ] **GD:** `loss_criterion` + `train_one_iter_gd`; registered in `gd.py`; launch script under `scripts/gd/`.
+- [ ] **Foundation:** `construct_scene` sets `self.rope`, `self.control_idx`, a controller (`self.c1`, …) and calls `self.scene.build(...)`; plus `construct_cameras`, `reward`, `reset`; mapped once in `registry.py`.
+- [ ] **RL:** `compute_observation` + `step_all`; matching `init_rl_env` branch in `rudinppo.py` & `sac.py`; launch scripts under `scripts/ppo|sac/`.
+- [ ] **DiffRL:** `compute_observation` + `loss_criterion` + `step_diff_rl`; matching `n_additional_obj` entry in `shac.py`; launch scripts under `scripts/shac|sapo/`.
+- [ ] **CMA-ES:** `eval_traj`; launch script under `scripts/cmaes/`.
+- [ ] **GD:** `loss_criterion` + `train_one_iter_gd`; `"myenv"` added to `gd.py`'s `--task` choices; launch script under `scripts/gd/`.
 - [ ] `compute_observation` length matches `_obs_dim` (keep `n_additional_obj` in sync).
