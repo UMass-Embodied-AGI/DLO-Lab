@@ -526,6 +526,7 @@ def main():
         "camera": False,
         "raytracer": args.raytracer,
         "exr_path": args.exr_path,  # raytracer env map; ignored when raytracer is off
+        "seed": args.seed,
     })
     env = EnvCls(config=env_config)
 

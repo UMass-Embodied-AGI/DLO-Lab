@@ -57,6 +57,7 @@ def experiment(
         "grad_clip": args.grad_clip,
         "disable_constraint_grad": args.disable_constraint_grad,
         "bptt_window": args.bptt_window,
+        "seed": args.seed,
     })
     # Create environment with differentiable physics
     mdp: Train_Env = get_env_class(task)(config=cfg)

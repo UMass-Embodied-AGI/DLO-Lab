@@ -34,7 +34,8 @@ def experiment(args):
         "raytracer": args.raytracer,
         "requires_grad": True,
         "bptt_window": args.bptt_window,
-        "grad_clip": args.grad_clip
+        "grad_clip": args.grad_clip,
+        "seed": args.seed,
     })
     gd_env: Train_Env = get_env_class(args.task)(config=cfg)
 

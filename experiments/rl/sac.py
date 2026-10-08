@@ -107,6 +107,7 @@ def experiment(
         "GUI": args.gui,
         "camera": False if args.test is None else True,
         "raytracer": args.raytracer,
+        "seed": args.seed,
     })
     mdp: Train_Env = get_env_class(task)(config=cfg)
 

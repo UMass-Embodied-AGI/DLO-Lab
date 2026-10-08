@@ -39,7 +39,11 @@ class Train_Env():
         if scene is None:
             # Initialize scene, if not provided
             if not gs._initialized:
-                gs.init(seed=0, precision="64", logging_level="error", backend=gs.gpu, performance_mode=True)
+                # gs.init() reseeds random/numpy/torch/cuda, so it must use the caller's seed
+                gs.init(
+                    seed=config.get('seed', 0), precision="64", logging_level="error", backend=gs.gpu,
+                    performance_mode=True
+                )
 
             viewer_options = gs.options.ViewerOptions(
                 camera_pos=(3, -1, 1.5),

@@ -402,7 +402,7 @@ def optimize_trajectory(
 def _build_env(
         task: str, log_dir: str, n_envs: int,
         vis_traj: Optional[str] = None, gui: bool = False,
-        raytracer: bool = False
+        raytracer: bool = False, seed: int = 0
     ) -> Train_Env:
     task = task.lower()
     EnvCls = get_env_class(task)
@@ -420,6 +420,7 @@ def _build_env(
         "camera": camera,
         "raytracer": raytracer,
         "requires_grad": False,
+        "seed": seed,
     })
     return EnvCls(config=cfg)
 
@@ -480,7 +481,7 @@ if __name__ == "__main__":
 
     exp_name = f"{args.exp_name}" if args.exp_name is not None else "cmaes"
     log_dir = f"logs/{args.task}/{exp_name}"
-    env = _build_env(args.task, log_dir, args.n_envs, args.vis_traj, args.gui, args.raytracer)
+    env = _build_env(args.task, log_dir, args.n_envs, args.vis_traj, args.gui, args.raytracer, seed=args.seed)
     env.init_cmaes_env(
         n_steps_sub=args.n_steps_sub,
     )
